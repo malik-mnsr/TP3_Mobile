@@ -9,18 +9,24 @@
         android:id="@+id/eventTitleInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Event Title" />
+        android:hint="Event Title"
+        android:inputType="text" />
 
-    <EditText
-        android:id="@+id/eventTimeInput"
+    <Button
+        android:id="@+id/timePickerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Event Time (e.g., 10:00 AM)" />
+        android:text="Pick Time" />
+    <Spinner
+        android:id="@+id/eventColorSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
 
     <Button
         android:id="@+id/saveEventButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save Event" />
-
+        android:text="Save" />
 </LinearLayout>
