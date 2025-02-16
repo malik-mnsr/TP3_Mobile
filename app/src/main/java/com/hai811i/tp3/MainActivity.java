@@ -53,18 +53,18 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialisation des vues
+
         RecyclerView horizontalCalendar = findViewById(R.id.horizontalCalendar);
         eventListView = findViewById(R.id.eventListView);
         addEventButton = findViewById(R.id.addEventButton);
         toggleEventsButton = findViewById(R.id.toggleEventsButton);
 
-        // Initialisation des composants pour la gestion des données
+
         sharedPreferences = getSharedPreferences("EventsData", MODE_PRIVATE);
         gson = new Gson();
-        eventsMap = new HashMap<>(); // Initialisation de eventsMap
+        eventsMap = new HashMap<>();
 
-        // Chargement des événements sauvegardés
+
         loadEvents();
 
         eventAdapter = new EventAdapter(this, new ArrayList<>(), this, this);
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
             }
         });
 
-        // Configuration du calendrier horizontal
+
         List<Date> dates = generateDates();
         HorizontalCalendarAdapter adapter = new HorizontalCalendarAdapter(this, dates, selectedDate -> {
             currentDate = selectedDate;
@@ -96,14 +96,14 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         );
 
-        // Automatically select and highlight today's date
+
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
-        currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(today); // Set the initial currentDate
-        adapter.selectDate(today); // Highlight today's date
-        horizontalCalendar.scrollToPosition(adapter.getSelectedPosition()); // Scroll to today's date if necessary
+        currentDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(today);
+        adapter.selectDate(today);
+        horizontalCalendar.scrollToPosition(adapter.getSelectedPosition());
 
-        // Bouton d'ajout d'événement
+
         addEventButton.setOnClickListener(v -> showAddEventDialog());
     }
 
@@ -139,17 +139,17 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
 
     @Override
     public void onEventDelete(Event event) {
-        // Remove the event from the map
+
         List<Event> events = eventsMap.get(currentDate);
         if (events != null) {
             events.remove(event);
             if (events.isEmpty()) {
                 eventsMap.remove(currentDate);
             }
-            // Save changes
+
             saveEvents();
         }
-        // Update the list view
+
         updateEventList(currentDate);
         Toast.makeText(this, "Event deleted", Toast.LENGTH_SHORT).show();
     }
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
     private void updateEventList(String date) {
         if (!areEventsVisible) return;
 
-        sortEventsByTime(date); // S'assurer que les événements sont triés
+        sortEventsByTime(date);
 
         List<Event> events = eventsMap.get(date);
         eventAdapter.clear();
@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
         final AlertDialog dialog = builder.create();
         final String[] selectedTime = {""};
 
-        // Initialisez le Spinner des couleurs
+
         setupColorSpinner(colorPicker);
 
         timePickerButton.setOnClickListener(v -> {
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
 
-            // Affichage d'une boîte de dialogue pour sélectionner l'heure
+
             TimePickerDialog timePickerDialog = new TimePickerDialog(MainActivity.this,
                     (view, hourOfDay, minuteOfDay) -> {
                         selectedTime[0] = String.format("%02d:%02d", hourOfDay, minuteOfDay);
@@ -206,19 +206,19 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
 
         saveEventButton.setOnClickListener(v -> {
             String title = eventTitleInput.getText().toString();
-            int selectedColor = colorValues[colorPicker.getSelectedItemPosition()]; // Couleur choisie
+            int selectedColor = colorValues[colorPicker.getSelectedItemPosition()];
 
             if (!title.isEmpty() && !selectedTime[0].isEmpty()) {
-                // Créer un nouvel événement avec une couleur
+
                 Event event = new Event(title, selectedTime[0], selectedColor);
 
-                // Ajouter l'événement à la carte
+
                 if (!eventsMap.containsKey(currentDate)) {
                     eventsMap.put(currentDate, new ArrayList<>());
                 }
                 eventsMap.get(currentDate).add(event);
 
-                // Trier et sauvegarder les événements
+
                 sortEventsByTime(currentDate);
                 saveEvents();
                 updateEventList(currentDate);
@@ -247,12 +247,12 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
         Spinner colorPicker = dialogView.findViewById(R.id.eventColorSpinner);
         Button saveEventButton = dialogView.findViewById(R.id.saveEventButton);
 
-        // Pré-remplir avec les valeurs existantes
+
         eventTitleInput.setText(event.getTitle());
         timePickerButton.setText("Heure sélectionnée : " + event.getTime());
-        setupColorSpinner(colorPicker); // Configure le Spinner avec les couleurs disponibles
+        setupColorSpinner(colorPicker);
 
-        // Pré-sélectionner la couleur existante
+
         int selectedColorIndex = -1;
         for (int i = 0; i < colorValues.length; i++) {
             if (colorValues[i] == event.getColor()) {
@@ -280,23 +280,23 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.OnEv
 
         saveEventButton.setOnClickListener(v -> {
             String title = eventTitleInput.getText().toString();
-            int selectedColor = colorValues[colorPicker.getSelectedItemPosition()]; // Couleur choisie
+            int selectedColor = colorValues[colorPicker.getSelectedItemPosition()];
 
             if (!title.isEmpty() && !selectedTime[0].isEmpty()) {
-                // Supprimer l'ancien événement
+
                 List<Event> events = eventsMap.get(currentDate);
                 if (events != null) {
                     events.remove(event);
                 }
 
-                // Créer et ajouter le nouvel événement
+
                 Event updatedEvent = new Event(title, selectedTime[0], selectedColor);
                 if (!eventsMap.containsKey(currentDate)) {
                     eventsMap.put(currentDate, new ArrayList<>());
                 }
                 eventsMap.get(currentDate).add(updatedEvent);
 
-                // Sauvegarder et mettre à jour
+
                 saveEvents();
                 updateEventList(currentDate);
 

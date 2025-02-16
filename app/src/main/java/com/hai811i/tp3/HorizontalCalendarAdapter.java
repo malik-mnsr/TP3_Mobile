@@ -18,8 +18,7 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
     private final List<Date> dates;
     private final OnDateSelectedListener listener;
     private final Context context;
-    private int selectedPosition = -1; // Track the selected position
-
+    private int selectedPosition = -1;
     public interface OnDateSelectedListener {
         void onDateSelected(String selectedDate);
     }
@@ -43,32 +42,32 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
 
         // Format the date into day, month, and year
         SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.getDefault());
-        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault()); // Abbreviated month name
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMM", Locale.getDefault());
         SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy", Locale.getDefault());
 
         String day = dayFormat.format(date);
         String month = monthFormat.format(date);
         String year = yearFormat.format(date);
 
-        // Set date values into TextViews
+
         holder.dayTextView.setText(day);
         holder.monthTextView.setText(month);
         holder.yearTextView.setText(year);
 
-        // Apply background style based on whether the date is selected
+
         if (position == selectedPosition) {
-            holder.itemView.setBackgroundResource(R.drawable.date_rectangle_selected_background); // Selected background
+            holder.itemView.setBackgroundResource(R.drawable.date_rectangle_selected_background);
         } else {
-            holder.itemView.setBackgroundResource(R.drawable.date_rectangle_background); // Default background
+            holder.itemView.setBackgroundResource(R.drawable.date_rectangle_background);
         }
 
-        // Set click listener to handle date selection
+
         holder.itemView.setOnClickListener(v -> {
-            selectedPosition = position; // Mark the clicked position as selected
-            notifyDataSetChanged(); // Refresh UI
+            selectedPosition = position;
+            notifyDataSetChanged();
             listener.onDateSelected(
                     new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(date)
-            ); // Notify listener with the selected date
+            );
         });
     }
 
@@ -83,16 +82,16 @@ public class HorizontalCalendarAdapter extends RecyclerView.Adapter<HorizontalCa
      * @param today Today's date
      */
     public void selectDate(Date today) {
-        // Format today's date to match the format of the dates in the list
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         String todayFormatted = dateFormat.format(today);
 
-        // Find today's date in the list
+
         for (int i = 0; i < dates.size(); i++) {
             String dateFormatted = dateFormat.format(dates.get(i));
             if (todayFormatted.equals(dateFormatted)) {
-                selectedPosition = i; // Set today's position as selected
-                notifyDataSetChanged(); // Refresh UI to highlight today's date
+                selectedPosition = i;
+                notifyDataSetChanged();
                 break;
             }
         }

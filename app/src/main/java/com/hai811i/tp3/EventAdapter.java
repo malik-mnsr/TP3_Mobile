@@ -36,19 +36,19 @@ public class EventAdapter extends ArrayAdapter<Event> {
                     .inflate(R.layout.event_item, parent, false);
         }
 
-        // Initialiser les vues
+
         TextView eventTitle = convertView.findViewById(R.id.eventTitle);
         TextView eventTime = convertView.findViewById(R.id.eventTime);
         View colorIndicator = convertView.findViewById(R.id.eventColorIndicator);
         ImageButton deleteButton = convertView.findViewById(R.id.deleteButton);
         ImageButton editButton = convertView.findViewById(R.id.editButton);
 
-        // Appliquer les données de l'événement
+
         eventTitle.setText(event.getTitle());
         eventTime.setText(event.getTime());
-        colorIndicator.setBackgroundColor(event.getColor()); // Appliquer la couleur à l'indicateur
+        colorIndicator.setBackgroundColor(event.getColor());
 
-        // Définir les clics pour supprimer et modifier
+
         deleteButton.setOnClickListener(v -> {
             if (deleteListener != null) {
                 deleteListener.onEventDelete(event);
